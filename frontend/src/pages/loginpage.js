@@ -2,6 +2,8 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle, faFacebook } from "@fortawesome/free-brands-svg-icons";
 import "./loginpage.css";
+import { Button, ButtonGroup, Box } from "@chakra-ui/react";
+import Login from "../componets/login";
 
 const Loginpage = () => {
   return (
@@ -9,23 +11,19 @@ const Loginpage = () => {
       <div className="background">
         <div className="shape"></div>
         <form>
-          <h3>Login Here</h3>
-
-          <label htmlFor="username">Email</label>
-          <input type="text" placeholder="Email or Phone" id="username" />
-
-          <label htmlFor="password">Password</label>
-          <input type="password" placeholder="Password" id="password" />
-
-          <button>Log In</button>
-          <div className="social">
-            <div className="go">
-              <FontAwesomeIcon icon={faGoogle} /> Google
-            </div>
-            <div className="fb">
-              <FontAwesomeIcon icon={faFacebook} /> Facebook
-            </div>
-          </div>
+          <h3>GapSap</h3>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            width="100%"
+          >
+            <ButtonGroup gap={4}>
+              <Button variant="solid">login</Button>
+              <Button variant={"outline"} color={"white"}>Sign up</Button>
+            </ButtonGroup>
+          </Box>
+          <Login/>
         </form>
         <div className="shape"></div>
       </div>
