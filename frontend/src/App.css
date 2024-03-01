@@ -1,0 +1,7 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  background-image: url("./assets/backgroung\ img.jpg");
+  background-position: center;
+  background-size: cover;
+}

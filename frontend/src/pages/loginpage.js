@@ -1,34 +1,61 @@
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGoogle, faFacebook } from "@fortawesome/free-brands-svg-icons";
-import "./loginpage.css";
-import { Button, ButtonGroup, Box } from "@chakra-ui/react";
+import {
+  Box,
+  Container,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+} from "@chakra-ui/react";
+import { useEffect } from "react";
+// import { useHistory } from "react-router";
 import Login from "../componets/login";
+import Signup from "../componets/signup";
 
-const Loginpage = () => {
+function Homepage() {
+  // const history = useHistory();
+
+  // useEffect(() => {
+  //   const user = JSON.parse(localStorage.getItem("userInfo"));
+
+  //   // if (user) history.push("/chats");
+  // }, []);
+
   return (
-    <div className="sectio">
-      <div className="background">
-        <div className="shape"></div>
-        <form>
-          <h3>GapSap</h3>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            width="100%"
-          >
-            <ButtonGroup gap={4}>
-              <Button variant="solid">login</Button>
-              <Button variant={"outline"} color={"white"}>Sign up</Button>
-            </ButtonGroup>
-          </Box>
-          <Login/>
-        </form>
-        <div className="shape"></div>
-      </div>
-    </div>
+    <Container maxW="xl" centerContent>
+      <Box
+        d="flex"
+        justifyContent="center"
+        p={3}
+        bg="#e8e8f4de"
+        w="100%"
+        m="40px 0 15px 0"
+        borderRadius="lg"
+        borderWidth="1px"
+      >
+        <Text fontSize="4xl" fontFamily="Work sans" textAlign="center" color="#29877a" fontWeight="600" >
+        गप-Shup
+        </Text>
+      </Box>
+      <Box bg="#e8e8f4de" w="100%" p={4} borderRadius="lg" borderWidth="1px">
+        <Tabs isFitted variant="soft-rounded">
+          <TabList mb="1em">
+            <Tab>Login</Tab>
+            <Tab>Sign Up</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <Login />
+            </TabPanel>
+            <TabPanel>
+              <Signup />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      </Box>
+    </Container>
   );
-};
+}
 
-export default Loginpage;
+export default Homepage;
