@@ -13,7 +13,7 @@ import { useEffect } from "react";
 import Login from "../componets/login";
 import Signup from "../componets/signup";
 
-function Homepage() {
+function Loginpage() {
   // const history = useHistory();
 
   // useEffect(() => {
@@ -58,4 +58,4 @@ function Homepage() {
   );
 }
 
-export default Homepage;
+export default Loginpage;
