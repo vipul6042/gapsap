@@ -6,9 +6,7 @@ import { Avatar, IconButton } from "@material-ui/core";
 import DonutLargeIcon from "@material-ui/icons/DonutLarge";
 import ChatIcon from "@material-ui/icons/Chat";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { IoMdSearch } from "react-icons/io";
-
-// import logo from "chat-app/public/pic.png";
+import SearchIcon from '@mui/icons-material/Search';
 
 function Sidebar() {
   // const chats = ["school", "h1","h2","h3","h4","h6","coaching", "friends", "person1", "person2"];
@@ -33,7 +31,6 @@ function Sidebar() {
           />
         </div>
         <div className="header_right">
-          {/* <MdDonutLarge style={{ fontSize: "1.5em", color: "#2c2727e0" }} /> */}
           <IconButton>
             <DonutLargeIcon />
           </IconButton>
@@ -46,7 +43,7 @@ function Sidebar() {
         </div>
       </div>
       <div className="searchBar">
-      <IoMdSearch style={{ fontSize: "1.75em", color: "#2c2727e0" }} />
+      <SearchIcon style={{ fontSize: "1.75em", color: "#2c2727e0" }} />
         <input
           class="form-control"
           // type="search"

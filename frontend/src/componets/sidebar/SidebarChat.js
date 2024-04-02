@@ -1,6 +1,6 @@
 import React from 'react';
 import {Avatar} from '@material-ui/core';
-import './sidebarChat.css';
+import './sidebarchat.css';
 function SidebarChat() {
   return (
     <div className='SidebarChat'>
