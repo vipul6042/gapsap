@@ -1,12 +1,12 @@
 import React, { useState ,useEffect,useRef} from "react";
 import { Avatar, IconButton } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { IoMdSearch } from "react-icons/io";
-import { IoAttach } from "react-icons/io5";
+import SearchIcon from '@mui/icons-material/Search';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 import MicIcon from "@material-ui/icons/Mic";
 import "./chat.css";
-import axios from "./axios";
+// import axios from "./axios";
 
 function Chat({ messages }) {
   const displaySectionRef = useRef(null);
@@ -14,12 +14,12 @@ function Chat({ messages }) {
   const sendMessage = async (e) => {
     e.preventDefault();
 
-    await axios.post("/message/new", {
-      message: input,
-      name: "vipul",
-      timestamp: Date(),
-      recieved: false,
-    });
+    // await axios.post("/message/new", {
+    //   message: input,
+    //   name: "vipul",
+    //   timestamp: Date(),
+    //   recieved: false,
+    // });
     setInput("");
   };
 
@@ -41,10 +41,10 @@ function Chat({ messages }) {
         </div>
         <div className="chat_header_right">
           <IconButton>
-            <IoMdSearch />
+            <SearchIcon />
           </IconButton>
           <IconButton>
-            <IoAttach />
+            <AttachFileIcon />
           </IconButton>
           <IconButton>
             <MoreVertIcon />
