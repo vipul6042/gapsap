@@ -41,8 +41,16 @@ export const login = async (req, res) => {
 
 export const allUser = async (req, res) => {
   try {
-    const allUser = await User.find();
-    res.status(200).json(allUser);
+    const keyword = req.query.search
+      ? {
+          $or: [
+            { name: { $regex: req.query.search, $options: "i" } },
+            { email: { $regex: req.query.search, $options: "i" } },
+          ],
+        }
+      : {};
+    const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+    res.send(users);
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
