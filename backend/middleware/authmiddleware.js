@@ -1,21 +1,30 @@
 import jwt from "jsonwebtoken";
+import User from "../models/user.js";
 
 export const verifyToken = async (req, res, next) => {
-  try {
-    let token = req.header("Authorization");
+  let token;
 
-    if (!token) {
-      return res.status(403).send("Access Denied");
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    try {
+      token = req.headers.authorization.split(" ")[1];
+
+      //decodes token id
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      req.user = await User.findById(decoded.id).select("-password");
+
+      next();
+    } catch (error) {
+      res.status(401);
+      throw new Error("Not authorized, token failed");
     }
+  }
 
-    if (token.startsWith("Bearer ")) {
-      token = token.slice(7, token.length).trimLeft();
-    }
-
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = verified;
-    next();
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  if (!token) {
+    res.status(401);
+    throw new Error("Not authorized, no token");
   }
 };

@@ -5,6 +5,9 @@ import { Server } from 'socket.io';
 import http from 'http';
 import mongoose from 'mongoose';
 import auth from "./routes/auth.js"
+import chat from "./routes/chat.js"
+import { chats } from './data/data.js';
+import Chat from './models/chat.js';
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 8000;
@@ -35,9 +38,12 @@ app.get("/",(req,resp)=>{
 })
 
 app.use('/auth',auth);
+app.use('/chat',chat)
+
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
     app.listen(port, () => console.log(`server Port: ${port}`));
+    // Chat.insertMany(chats)
   })
   .catch((err) => console.log(`did not connect ${err}`));
