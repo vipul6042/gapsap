@@ -2,6 +2,8 @@ import React from 'react'
 import Sidebar from '../componets/sidebar/sidebar';
 import "./homepage.css"
 import Chat from '../componets/chat/chat';
+import { ChatState } from "../context/chatProvider";
+
 const Homepage = () => {
     const chats = ["school", "h1","h2","h3","h4","h6","coaching", "friends", "person1", "person2"]
   return (

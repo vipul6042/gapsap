@@ -5,7 +5,7 @@ import { VStack } from "@chakra-ui/layout";
 import { useState } from "react";
 import { useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-// import { ChatState } from "../../Context/ChatProvider";
+import { ChatState } from "../context/chatProvider";
 
 const Login = () => {
   const [show, setShow] = useState(false);
@@ -16,8 +16,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  // const { setUser } = ChatState();
-
+  const { setUser, user } = ChatState();
   const submitHandler = async () => {
     setLoading(true);
     if (!email || !password) {
@@ -43,23 +42,34 @@ const Login = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-      const data = request.json();
-      toast({
-        title: "Login Successful",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        position: "top",
-      });
-      // setUser(data);
+      const data = await request.json();
+      if (request.ok) {
+        toast({
+          title: "Login Successful",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
+        });
+        setUser(data);
 
-      localStorage.setItem("userInfo", JSON.stringify(data));
+        localStorage.setItem("userInfo", JSON.stringify(data));
+        
+        navigate("/chat");
+      }
+      else {
+        toast({
+          title: data.msg,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
+        });
+      }
       setLoading(false);
-      navigate('/chat')
     } catch (error) {
       toast({
         title: "Error Occured!",
-        description: error.response.data.message,
         status: "error",
         duration: 5,
         isClosable: true,
