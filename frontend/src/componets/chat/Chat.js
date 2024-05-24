@@ -102,7 +102,13 @@ function Chat() {
       <div className="chat_header">
         <Avatar />
         <div className="chat_header_info">
-          <h3>{chats.chatName}</h3>
+          <h3>
+            {chats.chatName === "sender"
+              ? user.user._id != chats.users[0]._id
+                ? chats.users[0].name
+                : chats.users[1].name
+              : chats.chatName}
+          </h3>
           <p>
             {chats.isGroupChat
               ? chats.users.map((user) => user.name + "  ")

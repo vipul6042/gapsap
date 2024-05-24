@@ -16,8 +16,10 @@ function Sidebar() {
   const navigate = useNavigate();
   const handleButtonClick = () => {
     localStorage.removeItem("userInfo");
-    setUser("");
+    // setUser("");
     navigate("/");
+    window.location.reload()
+    
   };
   const fetchChats = async () => {
     try {
