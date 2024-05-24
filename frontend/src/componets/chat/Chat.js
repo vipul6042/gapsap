@@ -10,9 +10,11 @@ import { useParams } from "react-router-dom";
 import { ChatState } from "../../context/chatProvider";
 // import axios from "./axios";
 
-function Chat({ messages }) {
-  const { user, setUser } = ChatState();
+function Chat() {
+  const user = JSON.parse(localStorage.getItem("userInfo"));
+  // const { user } = ChatState();
   const [chats, setChats] = useState([]);
+  const [messages, setMessages] = useState([]);
   const { id } = useParams();
   const displaySectionRef = useRef(null);
   const [input, setInput] = useState("");
@@ -35,22 +37,58 @@ function Chat({ messages }) {
   };
   const sendMessage = async (e) => {
     e.preventDefault();
-
-    // await axios.post("/message/new", {
-    //   message: input,
-    //   name: "vipul",
-    //   timestamp: Date(),
-    //   recieved: false,
-    // });
-    setInput("");
+    try {
+      const url = process.env.REACT_APP_BASE_URL;
+      const token = await user.token;
+      const msg = {
+        content: input,
+        chatId: id,
+      };
+      setInput("");
+      const response = await fetch(`${url}/message/sendMsg`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(msg),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const fetchMessages = async () => {
+    try {
+      const url = process.env.REACT_APP_BASE_URL;
+      const token = await user.token;
+      const res = await fetch(`${url}/message/allMsg/${id}`, {
+        method: "get",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      setMessages(data);
+    } catch (error) {}
   };
   useEffect(() => {
-    fetchChats(); 
+    if (id) {
+      fetchChats();
+      fetchMessages();
+    }
   }, [id]);
-  useEffect(() => {
-    fetchChats(); 
-  }, []);
-console.log(chats);
+  console.log(messages);
+  function formatDateTime(isoString) {
+    const date = new Date(isoString);
+    const dateOptions = { year: "numeric", month: "2-digit", day: "2-digit" };
+    const timeOptions = { hour: "2-digit", minute: "2-digit", hour12: true };
+
+    const formattedDate = date.toLocaleDateString(undefined, dateOptions);
+    const formattedTime = date.toLocaleTimeString(undefined, timeOptions);
+
+    return `${formattedDate} ${formattedTime}`;
+  }
   useEffect(() => {
     // Scroll to the bottom when messages are updated
     if (displaySectionRef.current) {
@@ -65,7 +103,11 @@ console.log(chats);
         <Avatar />
         <div className="chat_header_info">
           <h3>{chats.chatName}</h3>
-          <p>{chats.isGroupChat?chats.users.map((user)=>(user.name+"  ")):"last seen at"}</p>
+          <p>
+            {chats.isGroupChat
+              ? chats.users.map((user) => user.name + "  ")
+              : "last seen at"}
+          </p>
         </div>
         <div className="chat_header_right">
           <IconButton>
@@ -83,13 +125,15 @@ console.log(chats);
         {messages.map((message) => (
           <p
             className={`chat_message ${
-              !message.recieved ? "chat_reciever" : ""
+              message.sender._id === user.user._id ? "chat_reciever" : ""
             }`}
             key={message._id}
           >
-            <span className="chat_name">{message.name}</span>
-            {message.message}
-            <span className="chat_timestamp">{message.timestamp}</span>
+            <span className="chat_name">{message.sender.name}</span>
+            {message.content}
+            <span className="chat_timestamp">
+              {formatDateTime(message.updatedAt)}
+            </span>
           </p>
         ))}
       </div>

@@ -165,7 +165,9 @@ export const addToGroup=async(req,res)=>{
 export const getChatById = async (req, res) => {
   try {
     const { id } = req.params;
-    
+    if(id===undefined){
+      return res.status(400).json({ message: 'id not given' });
+    }
     // Find chat by ID
     let chat = await Chat.findById(id)
       .populate('users', '-password') // Populate users field excluding password

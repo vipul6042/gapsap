@@ -16,7 +16,7 @@ function SidebarChat(chat) {
       <div className="chat_info">
         <h2>{chat.chat.chatName}</h2>
         <p>
-          {chat.chat.latestMessage ? chat.chat.latestMessage : "No Msg yet"}{" "}
+          {chat.chat.latestMessage ? chat.chat.latestMessage.content : "No Msg yet"}{" "}
         </p>
       </div>
     </div>
