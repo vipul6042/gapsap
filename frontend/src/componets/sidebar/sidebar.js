@@ -1,15 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SidebarChat from "./SidebarChat";
 import "./sidebar.css";
-
+import LogoutIcon from "@mui/icons-material/Logout";
 import { Avatar, IconButton } from "@material-ui/core";
 import DonutLargeIcon from "@material-ui/icons/DonutLarge";
 import ChatIcon from "@material-ui/icons/Chat";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
+import { ChatState } from "../../context/chatProvider";
+import { useNavigate } from "react-router-dom";
 
 function Sidebar() {
-  // const chats = ["school", "h1","h2","h3","h4","h6","coaching", "friends", "person1", "person2"];
+  const { user, setUser } = ChatState();
+  const [chats, setChats] = useState([]);
+  const navigate = useNavigate();
+  const handleButtonClick = () => {
+    localStorage.removeItem("userInfo");
+    setUser("");
+    navigate("/");
+  };
+  const fetchChats = async () => {
+    try {
+      const url = process.env.REACT_APP_BASE_URL;
+      const token = await user.token;
+      const response = await fetch(`${url}/chat/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      setChats(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    fetchChats();
+  }, [user]);
   return (
     <div className="sidebar">
       <div className="sidebar_header">
@@ -32,10 +61,10 @@ function Sidebar() {
         </div>
         <div className="header_right">
           <IconButton>
-            <DonutLargeIcon />
-          </IconButton>
-          <IconButton>
             <ChatIcon />
+          </IconButton>
+          <IconButton onClick={handleButtonClick}>
+            <LogoutIcon />
           </IconButton>
           <IconButton>
             <MoreVertIcon />
@@ -43,7 +72,7 @@ function Sidebar() {
         </div>
       </div>
       <div className="searchBar">
-      <SearchIcon style={{ fontSize: "1.75em", color: "#2c2727e0" }} />
+        <SearchIcon style={{ fontSize: "1.75em", color: "#2c2727e0" }} />
         <input
           class="form-control"
           // type="search"
@@ -57,22 +86,10 @@ function Sidebar() {
       <div className="sidebar_chats">
         {/* <h3 className="chat_title">Chats</h3> */}
         <div className="chat_collection">
-          {/* {chats.map((chat) => (
-            <div key={chat} className="chat_row">
-              {chat}
-            </div>
-          ))}*/}
-          <SidebarChat />
-          <SidebarChat />
-          <SidebarChat />
-          <SidebarChat />
-          <SidebarChat />
-          <SidebarChat />
-          <SidebarChat />
-          <SidebarChat />
-          <SidebarChat />
-        </div> 
-        
+          {chats.map((chat) => (
+            <SidebarChat chat={chat} />
+          ))}
+        </div>
       </div>
     </div>
   );

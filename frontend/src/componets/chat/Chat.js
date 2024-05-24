@@ -1,16 +1,38 @@
-import React, { useState ,useEffect,useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Avatar, IconButton } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import SearchIcon from '@mui/icons-material/Search';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
+import SearchIcon from "@mui/icons-material/Search";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 import MicIcon from "@material-ui/icons/Mic";
 import "./chat.css";
+import { useParams } from "react-router-dom";
+import { ChatState } from "../../context/chatProvider";
 // import axios from "./axios";
 
 function Chat({ messages }) {
+  const { user, setUser } = ChatState();
+  const [chats, setChats] = useState([]);
+  const { id } = useParams();
   const displaySectionRef = useRef(null);
   const [input, setInput] = useState("");
+  const fetchChats = async () => {
+    try {
+      const url = process.env.REACT_APP_BASE_URL;
+      const token = await user.token;
+      const response = await fetch(`${url}/chat/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      setChats(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
   const sendMessage = async (e) => {
     e.preventDefault();
 
@@ -22,7 +44,13 @@ function Chat({ messages }) {
     // });
     setInput("");
   };
-
+  useEffect(() => {
+    fetchChats(); 
+  }, [id]);
+  useEffect(() => {
+    fetchChats(); 
+  }, []);
+console.log(chats);
   useEffect(() => {
     // Scroll to the bottom when messages are updated
     if (displaySectionRef.current) {
@@ -36,8 +64,8 @@ function Chat({ messages }) {
       <div className="chat_header">
         <Avatar />
         <div className="chat_header_info">
-          <h3>Room name</h3>
-          <p>last seen at...</p>
+          <h3>{chats.chatName}</h3>
+          <p>{chats.isGroupChat?chats.users.map((user)=>(user.name+"  ")):"last seen at"}</p>
         </div>
         <div className="chat_header_right">
           <IconButton>

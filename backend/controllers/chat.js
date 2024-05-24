@@ -47,7 +47,7 @@ export const accessChat = async (req, res) => {
   }
 };
 
-export const fetchChats = (req, res) => {
+export const fetchChats = async (req, res) => { 
   try {
     Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
       .populate("users", "-password")
@@ -161,3 +161,30 @@ export const addToGroup=async(req,res)=>{
     res.json(added);
   }
 }
+
+export const getChatById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Find chat by ID
+    let chat = await Chat.findById(id)
+      .populate('users', '-password') // Populate users field excluding password
+      .populate('groupAdmin', '-password') // Populate groupAdmin field excluding password
+      .populate('latestMessage'); // Populate latestMessage field
+
+    if (!chat) {
+      return res.status(404).json({ message: 'Chat not found' });
+    }
+
+    // Further populate latestMessage sender details
+    chat = await User.populate(chat, {
+      path: 'latestMessage.sender',
+      select: 'name pic email',
+    });
+
+    res.status(200).json(chat);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
